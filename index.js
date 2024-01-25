@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 
 // Microservice Routes
 import userRouter from './routes/userRouter.js'
+import bookRouter from './routes/bookRouter.js'
 
 dotenv.config()
 
@@ -19,6 +20,7 @@ app.use(express.json({limit: '10mb'}))
 
 // Application Routes
 app.use('/user', userRouter)
+app.use('/book', bookRouter)
 
 app.get('/', (req, res) => res.json({ message: 'Welcome to the server' }))
 
