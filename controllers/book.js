@@ -42,14 +42,40 @@ export const addBook = async (req, res) => {
 */
 export const searchByISBN = async (req, res) => {
     try {
-        const { ISBN } = req.params;
+        const { ISBN } = req.params
 
         const book = await Book.findOne({ ISBN: ISBN })
 
         if (!book)
             return res.status(404).json({ success: false, message: 'Book not found' })
-        
+
         return res.status(200).json({ success: true, result: book })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/* 
+    Route:          /update/:ISBN
+    Description:    Update Book by ISBN
+    Params:         ISBN
+    Access:         Private
+    Method :        UPDATE
+*/
+export const updateBook = async (req, res) => {
+    try {
+        const { ISBN } = req.params
+
+        const existingBook = await Book.findOne({ ISBN: ISBN })
+        if(!existingBook)
+            return res.status(404).json({ success: false, message: 'Book not found' })
+
+        const updatedBook = await Book.findOneAndUpdate({ ISBN: ISBN }, req.body, { new: true })
+
+        if(!updatedBook)
+            return res.status(404).json({ success: false, message: 'Error Updating the Book, Try again later' })
+
+        return res.status(200).json({ success: true, result: updatedBook })
     } catch (error) {
         console.log(error);
     }
