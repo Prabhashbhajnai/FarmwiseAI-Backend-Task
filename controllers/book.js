@@ -60,22 +60,44 @@ export const searchByISBN = async (req, res) => {
     Description:    Update Book by ISBN
     Params:         ISBN
     Access:         Private
-    Method :        UPDATE
+    Method :        PATCH
 */
 export const updateBook = async (req, res) => {
     try {
         const { ISBN } = req.params
 
         const existingBook = await Book.findOne({ ISBN: ISBN })
-        if(!existingBook)
+        if (!existingBook)
             return res.status(404).json({ success: false, message: 'Book not found' })
 
         const updatedBook = await Book.findOneAndUpdate({ ISBN: ISBN }, req.body, { new: true })
 
-        if(!updatedBook)
+        if (!updatedBook)
             return res.status(404).json({ success: false, message: 'Error Updating the Book, Try again later' })
 
         return res.status(200).json({ success: true, result: updatedBook })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+/* 
+    Route:          /delete/:ISBN
+    Description:    Delete Book by ISBN
+    Params:         ISBN
+    Access:         Private
+    Method :        DELETE
+*/
+export const deleteBook = async (req, res) => {
+    try {
+        const { ISBN } = req.params
+
+        const deletedBook = await Book.findOneAndDelete({ ISBN: ISBN })
+
+        if (!deletedBook)
+            return res.status(404).json({ success: false, message: 'Book not found' });
+
+        return res.status(200).json({ success: true, message: 'Book Deleted Successfully', result: deletedBook })
     } catch (error) {
         console.log(error);
     }
